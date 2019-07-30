@@ -10,7 +10,7 @@ $(document).ready(function(e) {
         
     // First, unembed the cell that has just been grabbed by the user.
     paper.on('cell:pointerdown', function(cellView, evt, x, y) {
-        console.log(x, y);
+        console.log("down");
         var cell = cellView.model;
 
         if (!cell.get('embeds') || cell.get('embeds').length === 0) {
@@ -27,7 +27,7 @@ $(document).ready(function(e) {
     // When the dragged cell is dropped over another cell, let it become a child of the
     // element below.
     paper.on('cell:pointerup', function(cellView, evt, x, y) {
-
+        console.log("up");
         var cell = cellView.model;
         var cellViewsBelow = paper.findViewsFromPoint(cell.getBBox().center());
 
@@ -39,10 +39,14 @@ $(document).ready(function(e) {
                 //&& cellViewBelow.id == 'cut'
                 console.log(cellViewBelow.model);
                 cellViewBelow.model.embed(cell);
-                
+
                 cellViewBelow.model.fitEmbeds({deep: true, padding: 20});
             }
         }
+    });
+
+    paper.on('cell:pointerdblclick', function(cellView) {
+        $(this).remove();
     });
 
     $("#workHolder").on({
@@ -51,36 +55,13 @@ $(document).ready(function(e) {
             last_mousey = parseInt(e.clientY - 55);
         },
         mouseup: function(e) {
-            if ((last_mousex + 10 >= e.pageX - 185 && last_mousex - 10 <= e.pageX - 185) && (last_mousey + 10 >= e.pageY - 55&& last_mousey - 10 <= e.pageY - 55)) {
+            if ((last_mousex + 1 >= e.pageX - 185 && last_mousex - 1 <= e.pageX - 185) && (last_mousey + 1 >= e.pageY - 55&& last_mousey - 1 <= e.pageY - 55)) {
                 if(currOperation == "Prop") {
-                    var message = prompt("Enter proposition value: ");
-                    if(message != null) {
-                        var rect = new joint.shapes.standard.Rectangle();
-                        rect.position(last_mousex, last_mousey);
-                        rect.resize(10 + 10 * message.length, 20);
-                        rect.attr({
-                            id: 'pro',
-                            body: {
-                                fill: 'white',
-                                fillOpacity: '0.0',
-                                strokeOpacity: '0.0'
-                            },
-                            label: {
-                                text: message,
-                                fill: 'black'
-                            }
-                        });
-                        rect.addTo(graph);
-                    }
+                    add_prop(graph, last_mousex, last_mousey);
                 } else if(currOperation == "Cut") {
-                    console.log("epic gamer moment");
-                    var cut = new joint.shapes.basic.Rect({
-                        id: 'cut',
-                        position: { x: last_mousex, y: last_mousey },
-                        size: { width: 200, height: 200 },
-                        attrs: {rect: {fill: 'white', stroke: 'black'}}
-                    });
-                    cut.addTo(graph);
+                    add_cut(graph, last_mousex, last_mousey);
+                } else if(currOperation == "Delete") {
+                    delete_x(e);
                 }
             }
         }
@@ -103,4 +84,56 @@ $(document).ready(function(e) {
             $(this).css("background-color", "rgb(211, 138, 138)");
         }
     });
+
+    $("#change_mode").on('click', function() {
+        head = document.querySelector("header");
+        if(head.innerText == "Work Mode") {
+            head.innerText = "Proof Mode";
+        } else {
+            head.innerText = "Work Mode";
+        }
+    });
 });
+
+function add_prop(graph, last_mousex, last_mousey) {
+    var message = prompt("Enter proposition value: ");
+    if(message != null) {
+        var rect = new joint.shapes.standard.Rectangle();
+        rect.position(last_mousex + 15, last_mousey + 5);
+        rect.resize(10 + 10 * message.length, 20);
+        rect.attr({
+            id: 'pro',
+            body: {
+                fill: 'white',
+                fillOpacity: '0.0',
+                strokeOpacity: '0.0'
+            },
+            label: {
+                text: message,
+                fill: 'black'
+            }
+        });
+        rect.addTo(graph);
+    }
+    $('#workHolder').trigger('cell:pointerup');
+    $('#workHolder').trigger('cell:pointerdown');
+}
+
+function add_cut(graph, last_mousex, last_mousey) {
+    var cut = new joint.shapes.basic.Rect();
+    cut.position(last_mousex - 75, last_mousey - 75);
+    cut.resize(200, 200);
+    cut.attr({
+        id: 'cut',
+        body: {
+            fillopacity: '0.0', 
+            stroke: 'black'
+        }
+    });
+    graph.addCell(cut);
+}
+
+function delete_x(cell) {
+    console.log(cell.target);
+    cell.target.remove();
+}
