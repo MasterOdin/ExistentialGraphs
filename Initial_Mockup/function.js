@@ -57,6 +57,10 @@ $(document).ready(function(e) {
     });
 });
 
+// TO DO:
+// - detect button presses using .on(...)
+// - draw graph using json tree
+
 function changeMode() {
     head = document.querySelector("header");
     if(head.innerText == "Work Mode") {
