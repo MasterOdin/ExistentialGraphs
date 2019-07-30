@@ -4,7 +4,12 @@
     <title>CSS Template</title>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" type="text/css" href="https://cdnjs.cloudflare.com/ajax/libs/jointjs/2.1.0/joint.css" />
     <link rel="stylesheet" type="text/css" href="design.css">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.4.1/jquery.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/lodash.js/4.17.11/lodash.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/backbone.js/1.4.0/backbone.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jointjs/2.1.0/joint.js"></script>
     <script src="function.js"></script>
     </head>
     <body>
@@ -12,30 +17,28 @@
             Work Mode
         </header>
         <div id="sidebar">
-            <button id="change_mode" class="sidebar_button" style="margin-bottom: 25px" onclick="changeMode()">Change Mode</button>
-            <button class="sidebar_button">Prop</button>
-            <button class="sidebar_button">Drag 1</button>
-            <button class="sidebar_button">Resize 1</button>
-            <button class="sidebar_button">Copy 1</button>
-            <button class="sidebar_button">Delete 1</button>
-            <button class="sidebar_button">Cut</button>
-            <button class="sidebar_button">Drag</button>
-            <button class="sidebar_button">Resize</button>
-            <button class="sidebar_button">Copy</button>
-            <button class="sidebar_button">Delete</button>
-            <button class="sidebar_button work_button">a b c</button>
-            <button class="sidebar_button work_button">Special Cuts</button>
-            <button class="sidebar_button proof_button">Insert DC</button>
-            <button class="sidebar_button proof_button">Erase DC</button>
-            <button class="sidebar_button proof_button">Insertion</button>
-            <button class="sidebar_button proof_button">Erasure</button>
-            <button class="sidebar_button proof_button">Iteration</button>
-            <button class="sidebar_button proof_button">Deiteration</button>
+            <div id="change_mode" class="sidebar_button" style="margin-bottom: 25px" onclick="changeMode()">Change Mode</div>
+            <div class="sidebar_button">Prop</div>
+            <div class="sidebar_button">Resize 1</div>
+            <div class="sidebar_button">Copy 1</div>
+            <div class="sidebar_button">Delete 1</div>
+            <div class="sidebar_button">Cut</div>
+            <div class="sidebar_button">Drag</div>
+            <div class="sidebar_button">Copy</div>
+            <div class="sidebar_button">Delete</div>
+            <div class="sidebar_button work_button">a b c</div>
+            <div class="sidebar_button work_button">Special Cuts</div>
+            <div class="sidebar_button proof_button">Insert DC</div>
+            <div class="sidebar_button proof_button">Erase DC</div>
+            <div class="sidebar_button proof_button">Insertion</div>
+            <div class="sidebar_button proof_button">Erasure</div>
+            <div class="sidebar_button proof_button">Iteration</div>
+            <div class="sidebar_button proof_button">Deiteration</div>
         </div>
+        <div id="workHolder"></div>
     </body>
 	
 	<script>
 		require('../renderer.js');
 	</script>
 </html>
-

@@ -1,0 +1,24 @@
+{
+    "level":0,
+    "children":[
+      {
+        "level":1,
+        "children":[
+          "A",
+          {
+            "level":2,
+            "children":[
+              {
+                "level":3,
+                "children":[
+                  "B"
+                ]
+              },
+              "C"
+            ]
+          },
+          "D"
+        ]
+      }
+    ]
+  }
