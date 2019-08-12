@@ -27,9 +27,10 @@ $(document).ready(function(e) {
     // When the dragged cell is dropped over another cell, let it become a child of the
     // element below.
     paper.on('cell:pointerup', function(cellView, evt, x, y) {
-        console.log("up");
         var cell = cellView.model;
         var cellViewsBelow = paper.findViewsFromPoint(cell.getBBox().center());
+        
+        console.log("PARENT1", cell.get('parent'));
 
         if (cellViewsBelow.length) {
             // Note that the findViewsFromPoint() returns the view for the `cell` itself.
@@ -43,6 +44,7 @@ $(document).ready(function(e) {
                 cellViewBelow.model.fitEmbeds({deep: true, padding: 20});
             }
         }
+        console.log("PARENT2", cell.get('parent'));
     });
 
     paper.on('cell:pointerdblclick', function(cellView) {
@@ -65,6 +67,16 @@ $(document).ready(function(e) {
                 }
             }
         }
+    });
+
+    // highlight parent element when hovering
+    paper.bind('cell:mouseover cell:mousedown', function(cellView, evt, x, y) {
+        cellView.
+        cellView.el.attr({
+            body: {
+                stroke: 'red'
+            }
+        })
     });
 
     $(".sidebar_button").on('click', function(e) {
