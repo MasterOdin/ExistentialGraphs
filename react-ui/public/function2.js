@@ -1,6 +1,7 @@
 // Things to do:
 // - when dragging element, bring it to top level
 // - when placing new proposition
+// - copy 1 or all children: dia.Element.prototype.clone
 
 $(document).ready(function(e) {
   var graph = new joint.dia.Graph();
@@ -15,7 +16,7 @@ $(document).ready(function(e) {
 
   var last_mousex = (last_mousey = 0);
   var mousex = (mousey = 0);
-  var currOperation = "";
+  var currOperation = "Proposition";
   var message = "";
 
   // First, unembed the cell that has just been grabbed by the user.
@@ -61,8 +62,11 @@ $(document).ready(function(e) {
 
   $("#workHolder").on({
     mousedown: function(e) {
+      currOperation = $($($(".Mui-selected").html())[0].innerHTML)[0].innerHTML;
       last_mousex = parseInt(e.clientX - 185);
       last_mousey = parseInt(e.clientY - 55);
+      console.log(e);
+      e.target.toFront();
       $("#workHolder").on({
         mousemove: function(e) {
           if (e.target.id != "v-2") {
@@ -98,27 +102,6 @@ $(document).ready(function(e) {
             }
         })
         */
-  });
-
-  $(".MuiListItem-button").on("click", function(e) {
-    currOperation = $($($(this.innerHTML)[0].innerHTML)[0]).text();
-    console.log(currOperation);
-    /*if (currOperation == this.innerHTML) {
-      currOperation = "";
-      $(this).css("background-color", "white");
-    } else {
-      for (var i = 0; i < $(".MuiListItem-button").length; i++) {
-        if ($(".MuiListItem-button")[i].innerHTML == currOperation) {
-          console.log($(".MuiListItem-button")[i].innerHTML);
-          currOperation = "";
-          $($(".MuiListItem-button")[i]).css("background-color", "white");
-          break;
-        }
-      }
-      currOperation = this.innerHTML;
-      $(this).css("background-color", "rgb(211, 138, 138)");
-    }
-    console.log(currOperation);*/
   });
 
   $("#change_mode").on("click", function() {

@@ -179,7 +179,6 @@ function App() {
       </Drawer>
       //Main Context
       <main className={clsx(classes.content, {})}>
-        This is text
         <div id="workHolder" />
       </main>
     </div>
