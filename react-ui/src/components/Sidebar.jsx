@@ -1,3 +1,5 @@
+//DEPRECATED, EVERYTHING MOVED INTO APP.JS
+
 import React, { Component } from "react";
 import { makeStyles } from "@material-ui/core/styles";
 import {
@@ -9,7 +11,7 @@ import {
   ListItemText
 } from "@material-ui/core";
 
-const drawerWidth = 240;
+const drawerWidth = 360;
 
 const useStyles = makeStyles(theme => ({
   root: {
@@ -94,41 +96,48 @@ export default function PermanentDrawerLeft() {
           >
             <ListItemText primary="Delete" />
           </ListItem>
-        </List>
-        <Divider />
-        <List component="nav" aria-label="Prove Graph">
           <ListItem
             button
             selected={selectedButton === 4}
             onClick={event => handleModeClick(event, 4)}
           >
-            <ListItemText primary="Erase DC" />
+            <ListItemText primary="Delete-Children" />
           </ListItem>
+        </List>
+        <Divider />
+        <List component="nav" aria-label="Prove Graph">
           <ListItem
             button
             selected={selectedButton === 5}
             onClick={event => handleModeClick(event, 5)}
           >
-            <ListItemText primary="Insertion" />
+            <ListItemText primary="Erase DC" />
           </ListItem>
           <ListItem
             button
             selected={selectedButton === 6}
             onClick={event => handleModeClick(event, 6)}
           >
-            <ListItemText primary="Erasure" />
+            <ListItemText primary="Insertion" />
           </ListItem>
           <ListItem
             button
             selected={selectedButton === 7}
             onClick={event => handleModeClick(event, 7)}
           >
-            <ListItemText primary="Iteration" />
+            <ListItemText primary="Erasure" />
           </ListItem>
           <ListItem
             button
             selected={selectedButton === 8}
             onClick={event => handleModeClick(event, 8)}
+          >
+            <ListItemText primary="Iteration" />
+          </ListItem>
+          <ListItem
+            button
+            selected={selectedButton === 9}
+            onClick={event => handleModeClick(event, 9)}
           >
             <ListItemText primary="Deiteration" />
           </ListItem>
