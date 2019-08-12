@@ -61,6 +61,7 @@ $(document).ready(function(e) {
 
   $("#workHolder").on({
     mousedown: function(e) {
+      currOperation = $($($(".Mui-selected").html())[0].innerHTML)[0].innerHTML;
       last_mousex = parseInt(e.clientX - 185);
       last_mousey = parseInt(e.clientY - 55);
       $("#workHolder").on({
@@ -98,25 +99,6 @@ $(document).ready(function(e) {
             }
         })
         */
-  });
-
-  $(".MuiListItem-button").on("click", function(e) {
-    if (currOperation == this.innerHTML) {
-      currOperation = "";
-      $(this).css("background-color", "white");
-    } else {
-      for (var i = 0; i < $(".MuiListItem-button").length; i++) {
-        if ($(".MuiListItem-button")[i].innerHTML == currOperation) {
-          console.log($(".MuiListItem-button")[i].innerHTML);
-          currOperation = "";
-          $($(".MuiListItem-button")[i]).css("background-color", "white");
-          break;
-        }
-      }
-      currOperation = this.innerHTML;
-      $(this).css("background-color", "rgb(211, 138, 138)");
-    }
-    console.log(currOperation);
   });
 
   $("#change_mode").on("click", function() {
