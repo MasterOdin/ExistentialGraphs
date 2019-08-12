@@ -1,10 +1,15 @@
 import React from "react";
 import clsx from "clsx";
-import Sidebar from "./components/Sidebar";
 
 import { makeStyles, useTheme } from "@material-ui/core/styles";
-import CssBaseline from "@material-ui/core/CssBaseline";
-import Drawer from "@material-ui/core/Drawer";
+import {
+  CssBaseline,
+  Drawer,
+  Divider,
+  List,
+  ListItem,
+  ListItemText
+} from "@material-ui/core";
 
 const drawerWidth = 240;
 
@@ -26,6 +31,7 @@ const useStyles = makeStyles(theme => ({
   drawerPaper: {
     width: drawerWidth
   },
+  toolbar: theme.mixins.toolbar,
   content: {
     flexGrow: 1,
     padding: theme.spacing(3),
@@ -46,16 +52,38 @@ const useStyles = makeStyles(theme => ({
 
 function App() {
   const classes = useStyles();
-  const theme = useTheme();
   //Holds the state of whether the sidebar is open
   const [open, setOpen] = React.useState(true);
+  //Holds the current selected button state
+  const [selectedButton, setSelectedButton] = React.useState(0);
+  //Current Proposition
+  const [selectedProp, setSelectedProp] = React.useState(0);
+  //Current Cut
+  const [selectedCut, setSelectedCut] = React.useState(0);
 
+  //Opening sidebar
   function sidebarOpen() {
     setOpen(true);
   }
 
+  //Closing sidebar
   function sidebarClose() {
     setOpen(false);
+  }
+
+  //Changing edit mode
+  function handleModeClick(event, index) {
+    setSelectedButton(index);
+  }
+
+  //Changing current proposition
+  function handlePropClick(event, index) {
+    setSelectedProp(index);
+  }
+
+  //Changing current cut type
+  function handleCutClick(event, index) {
+    setSelectedCut(index);
   }
 
   return (
@@ -68,8 +96,92 @@ function App() {
         open={open}
         classes={{ paper: classes.drawerPaper }}
       >
-        //Test
+        <div className={classes.toolbar} />
+        <Divider />
+        <List component="nav" aria-label="Add To Graph">
+          <ListItem
+            button
+            selected={selectedButton === 0}
+            onClick={event => handleModeClick(event, 0)}
+          >
+            <ListItemText primary="Proposition" />
+          </ListItem>
+          <ListItem
+            button
+            selected={selectedButton === 1}
+            onClick={event => handleModeClick(event, 1)}
+          >
+            <ListItemText primary="Cut" />
+          </ListItem>
+        </List>
+        <Divider />
+        <List component="nav" aria-label="Operations On Graph">
+          <ListItem
+            button
+            selected={selectedButton === 2}
+            onClick={event => handleModeClick(event, 2)}
+          >
+            <ListItemText primary="Copy" />
+          </ListItem>
+          <ListItem
+            button
+            selected={selectedButton === 3}
+            onClick={event => handleModeClick(event, 3)}
+          >
+            <ListItemText primary="Delete" />
+          </ListItem>
+          <ListItem
+            button
+            selected={selectedButton === 4}
+            onClick={event => handleModeClick(event, 4)}
+          >
+            <ListItemText primary="Delete (Including Children)" />
+          </ListItem>
+        </List>
+        <Divider />
+        <List component="nav" aria-label="Prove Graph">
+          <ListItem
+            button
+            selected={selectedButton === 5}
+            onClick={event => handleModeClick(event, 5)}
+          >
+            <ListItemText primary="Erase DC" />
+          </ListItem>
+          <ListItem
+            button
+            selected={selectedButton === 6}
+            onClick={event => handleModeClick(event, 6)}
+          >
+            <ListItemText primary="Insertion" />
+          </ListItem>
+          <ListItem
+            button
+            selected={selectedButton === 7}
+            onClick={event => handleModeClick(event, 7)}
+          >
+            <ListItemText primary="Erasure" />
+          </ListItem>
+          <ListItem
+            button
+            selected={selectedButton === 8}
+            onClick={event => handleModeClick(event, 8)}
+          >
+            <ListItemText primary="Iteration" />
+          </ListItem>
+          <ListItem
+            button
+            selected={selectedButton === 9}
+            onClick={event => handleModeClick(event, 9)}
+          >
+            <ListItemText primary="Deiteration" />
+          </ListItem>
+        </List>
       </Drawer>
+      //Main Context
+      <main className={clsx(classes.content, {})}>
+        This is text
+        <div id="workHolder" />
+      </main>
     </div>
   );
 }
