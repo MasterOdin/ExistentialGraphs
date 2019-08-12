@@ -1,7 +1,12 @@
+// Things to do:
+// - when dragging element, bring it to top level
+// - when placing new proposition
+
+
 $(document).ready(function(e) {
 
     var graph = new joint.dia.Graph;
-    var paper = new joint.dia.Paper({ el: $('#workHolder'), width: '88%', height: '70%', gridSize: 1, model: graph });
+    var paper = new joint.dia.Paper({ el: $('#workHolder'), width: '88%', height: '70%', model: graph, gridSize: 10, drawGrid: true });
 
     var last_mousex = last_mousey = 0;
     var mousex = mousey = 0;
@@ -47,14 +52,17 @@ $(document).ready(function(e) {
         console.log("PARENT2", cell.get('parent'));
     });
 
-    paper.on('cell:pointerdblclick', function(cellView) {
-        $(this).remove();
-    });
-
     $("#workHolder").on({
         mousedown: function(e) {
             last_mousex = parseInt(e.clientX - 185);
             last_mousey = parseInt(e.clientY - 55);
+            $("#workHolder").on({
+                mousemove: function(e) {
+                    if(e.target.id != "v-2"){
+                        console.log(e, e.target.parentNode.parentNode.parentNode);
+                    }
+                }
+            })
         },
         mouseup: function(e) {
             if ((last_mousex + 1 >= e.pageX - 185 && last_mousex - 1 <= e.pageX - 185) && (last_mousey + 1 >= e.pageY - 55&& last_mousey - 1 <= e.pageY - 55)) {
@@ -71,12 +79,14 @@ $(document).ready(function(e) {
 
     // highlight parent element when hovering
     paper.bind('cell:mouseover cell:mousedown', function(cellView, evt, x, y) {
+        /*
         cellView.
         cellView.el.attr({
             body: {
                 stroke: 'red'
             }
         })
+        */
     });
 
     $(".sidebar_button").on('click', function(e) {
@@ -137,8 +147,8 @@ function add_cut(graph, last_mousex, last_mousey) {
     cut.resize(200, 200);
     cut.attr({
         id: 'cut',
-        body: {
-            fillopacity: '0.0', 
+        rect: {
+            'fill-opacity': 0, 
             stroke: 'black'
         }
     });
