@@ -3,13 +3,21 @@ import clsx from "clsx";
 
 import { makeStyles, useTheme } from "@material-ui/core/styles";
 import {
+  Button,
+  ButtonGroup,
   CssBaseline,
   Drawer,
   Divider,
+  Fab,
+  Grid,
+  IconButton,
   List,
   ListItem,
   ListItemText
 } from "@material-ui/core";
+
+import ChevronLeftIcon from "@material-ui/icons/ChevronLeft";
+import MenuIcon from "@material-ui/icons/Menu";
 
 const drawerWidth = 240;
 
@@ -31,7 +39,13 @@ const useStyles = makeStyles(theme => ({
   drawerPaper: {
     width: drawerWidth
   },
-  toolbar: theme.mixins.toolbar,
+  drawerHeader: {
+    display: "flex",
+    alignItems: "center",
+    padding: "0 8px",
+    ...theme.mixins.toolbar,
+    justifyContent: "flex-end"
+  },
   content: {
     flexGrow: 1,
     padding: theme.spacing(3),
@@ -47,19 +61,23 @@ const useStyles = makeStyles(theme => ({
       duration: theme.transitions.duration.enteringScreen
     }),
     marginLeft: 0
+  },
+  fab: {
+    position: "absolute",
+    top: theme.spacing(2),
+    left: theme.spacing(2),
+    zIndex: 10
   }
 }));
 
 function App() {
   const classes = useStyles();
   //Holds the state of whether the sidebar is open
-  const [open, setOpen] = React.useState(true);
+  const [open, setOpen] = React.useState(false);
   //Holds the current selected button state
   const [selectedButton, setSelectedButton] = React.useState(0);
   //Current Proposition
-  const [selectedProp, setSelectedProp] = React.useState(0);
-  //Current Cut
-  const [selectedCut, setSelectedCut] = React.useState(0);
+  const [selectedProp, setSelectedProp] = React.useState("P");
 
   //Opening sidebar
   function sidebarOpen() {
@@ -77,13 +95,8 @@ function App() {
   }
 
   //Changing current proposition
-  function handlePropClick(event, index) {
-    setSelectedProp(index);
-  }
-
-  //Changing current cut type
-  function handleCutClick(event, index) {
-    setSelectedCut(index);
+  function handlePropClick(event, letter) {
+    setSelectedProp(letter);
   }
 
   return (
@@ -96,7 +109,11 @@ function App() {
         open={open}
         classes={{ paper: classes.drawerPaper }}
       >
-        <div className={classes.toolbar} />
+        <div className={classes.drawerHeader}>
+          <IconButton onClick={sidebarClose}>
+            <ChevronLeftIcon />
+          </IconButton>
+        </div>
         <Divider />
         <List component="nav" aria-label="Add To Graph">
           <ListItem
@@ -176,9 +193,114 @@ function App() {
             <ListItemText primary="Deiteration" />
           </ListItem>
         </List>
+        <Divider />
+        <Grid item xs={12} md={6}>
+          <Grid container spacing={1} direction="column" alignItems="center">
+            <Grid item>
+              <ButtonGroup
+                color="primary"
+                aria-label="outlined primary button group"
+              >
+                <Button
+                  disabled={selectedProp === "P"}
+                  onClick={event => handlePropClick(event, "P")}
+                >
+                  P
+                </Button>
+                <Button
+                  disabled={selectedProp === "Q"}
+                  onClick={event => handlePropClick(event, "Q")}
+                >
+                  Q
+                </Button>
+                <Button
+                  disabled={selectedProp === "R"}
+                  onClick={event => handlePropClick(event, "R")}
+                >
+                  R
+                </Button>
+                <Button
+                  disabled={selectedProp === "S"}
+                  onClick={event => handlePropClick(event, "S")}
+                >
+                  S
+                </Button>
+              </ButtonGroup>
+            </Grid>
+            <Grid item>
+              <ButtonGroup
+                color="primary"
+                aria-label="outlined primary button group"
+              >
+                <Button
+                  disabled={selectedProp === "A"}
+                  onClick={event => handlePropClick(event, "A")}
+                >
+                  A
+                </Button>
+                <Button
+                  disabled={selectedProp === "B"}
+                  onClick={event => handlePropClick(event, "B")}
+                >
+                  B
+                </Button>
+                <Button
+                  disabled={selectedProp === "C"}
+                  onClick={event => handlePropClick(event, "C")}
+                >
+                  C
+                </Button>
+                <Button
+                  disabled={selectedProp === "D"}
+                  onClick={event => handlePropClick(event, "D")}
+                >
+                  D
+                </Button>
+              </ButtonGroup>
+            </Grid>
+            <Grid item>
+              <ButtonGroup
+                color="primary"
+                aria-label="outlined primary button group"
+              >
+                <Button
+                  disabled={selectedProp === "Θ"}
+                  onClick={event => handlePropClick(event, "Θ")}
+                >
+                  Θ
+                </Button>
+                <Button
+                  disabled={selectedProp === "Φ"}
+                  onClick={event => handlePropClick(event, "Φ")}
+                >
+                  Φ
+                </Button>
+                <Button
+                  disabled={selectedProp === "Ψ"}
+                  onClick={event => handlePropClick(event, "Ψ")}
+                >
+                  Ψ
+                </Button>
+                <Button
+                  disabled={selectedProp === "Ω"}
+                  onClick={event => handlePropClick(event, "Ω")}
+                >
+                  Ω
+                </Button>
+              </ButtonGroup>
+            </Grid>
+          </Grid>
+        </Grid>
       </Drawer>
-      //Main Context
-      <main className={clsx(classes.content, {})}>
+      <main className={clsx(classes.content)}>
+        <Fab
+          color="primary"
+          aria-label="add"
+          className={classes.fab}
+          onClick={sidebarOpen}
+        >
+          <MenuIcon />
+        </Fab>
         <div id="workHolder" />
       </main>
     </div>
