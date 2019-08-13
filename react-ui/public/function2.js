@@ -18,21 +18,19 @@ $(document).ready(function(e) {
   var mousex = (mousey = 0);
   var currOperation = "Proposition";
   var message = "";
+  var offsetx = 185, offsety = 55;
 
   // First, unembed the cell that has just been grabbed by the user.
   paper.on("cell:pointerdown", function(cellView, evt, x, y) {
-    console.log("down");
     var cell = cellView.model;
-
-    if (!cell.get("embeds") || cell.get("embeds").length === 0) {
-      // Show the dragged element above all the other cells (except when the
-      // element is a parent).
-      cell.toFront();
-    }
 
     if (cell.get("parent")) {
       graph.getCell(cell.get("parent")).unembed(cell);
+      cell.toFront();
+      return;
     }
+
+    cell.toFront({deep: true});
   });
 
   // When the dragged cell is dropped over another cell, let it become a child of the
@@ -40,8 +38,7 @@ $(document).ready(function(e) {
   paper.on("cell:pointerup", function(cellView, evt, x, y) {
     var cell = cellView.model;
     var cellViewsBelow = paper.findViewsFromPoint(cell.getBBox().center());
-
-    console.log("PARENT1", cell.get("parent"));
+    console.log(cell, cellViewBelow);
 
     if (cellViewsBelow.length) {
       // Note that the findViewsFromPoint() returns the view for the `cell` itself.
@@ -57,30 +54,17 @@ $(document).ready(function(e) {
         cellViewBelow.model.fitEmbeds({ deep: true, padding: 20 });
       }
     }
-    console.log("PARENT2", cell.get("parent"));
   });
 
   $("#workHolder").on({
     mousedown: function(e) {
       currOperation = $($($(".Mui-selected").html())[0].innerHTML)[0].innerHTML;
-      last_mousex = parseInt(e.clientX - 185);
-      last_mousey = parseInt(e.clientY - 55);
-      console.log(e);
-      e.target.toFront();
-      $("#workHolder").on({
-        mousemove: function(e) {
-          if (e.target.id != "v-2") {
-            console.log(e, e.target.parentNode.parentNode.parentNode);
-          }
-        }
-      });
+      last_mousex = parseInt(e.clientX);
+      last_mousey = parseInt(e.clientY);
     },
     mouseup: function(e) {
-      if (
-        last_mousex + 1 >= e.pageX - 185 &&
-        last_mousex - 1 <= e.pageX - 185 &&
-        (last_mousey + 1 >= e.pageY - 55 && last_mousey - 1 <= e.pageY - 55)
-      ) {
+      if ((last_mousex + 1 >= e.pageX && last_mousex - 1 <= e.pageX) && 
+          (last_mousey + 1 >= e.pageY && last_mousey - 1 <= e.pageY)) {
         if (currOperation == "Proposition") {
           add_prop(graph, last_mousex, last_mousey);
         } else if (currOperation == "Cut") {
@@ -115,10 +99,10 @@ $(document).ready(function(e) {
 });
 
 function add_prop(graph, last_mousex, last_mousey) {
-  var message = prompt("Enter proposition value: ");
+  var message = $($(".MuiButtonBase-root").filter("[tabindex= '-1']")[0].innerHTML)[0].innerHTML;
+  var rect = new joint.shapes.standard.Rectangle();
   if (message != null) {
-    var rect = new joint.shapes.standard.Rectangle();
-    rect.position(last_mousex + 15, last_mousey + 5);
+    rect.position(last_mousex - 10, last_mousey - 10);
     rect.resize(10 + 10 * message.length, 20);
     rect.attr({
       id: "pro",
@@ -134,13 +118,14 @@ function add_prop(graph, last_mousex, last_mousey) {
     });
     rect.addTo(graph);
   }
-  $("#workHolder").trigger("cell:pointerup");
+  rect.toFront();
   $("#workHolder").trigger("cell:pointerdown");
+  $("#workHolder").trigger("cell:pointerup");
 }
 
 function add_cut(graph, last_mousex, last_mousey) {
   var cut = new joint.shapes.basic.Rect();
-  cut.position(last_mousex - 75, last_mousey - 75);
+  cut.position(last_mousex - 100, last_mousey - 95);
   cut.resize(200, 200);
   cut.attr({
     id: "cut",
@@ -156,3 +141,4 @@ function delete_x(cell) {
   console.log(cell.target);
   cell.target.remove();
 }
+
