@@ -1,6 +1,7 @@
 // Things to do:
-// - when dragging element, bring it to top level
-// - when placing new proposition
+// - implement proof tools
+// - fully integrate new code
+// - debug
 
 
 $(document).ready(function(e) {
@@ -12,12 +13,14 @@ $(document).ready(function(e) {
     var mousex = mousey = 0;
     var currOperation = "";
     var message = "";
-        
+    var savedGraph = null;
+
     // First, unembed the cell that has just been grabbed by the user.
     paper.on('cell:pointerdown', function(cellView, evt, x, y) {
-        console.log("down");
         var cell = cellView.model;
-
+        this.options.embeddingMode = true;
+        console.log(graph.toJSON());
+        
         if (!cell.get('embeds') || cell.get('embeds').length === 0) {
             // Show the dragged element above all the other cells (except when the
             // element is a parent).
@@ -35,34 +38,24 @@ $(document).ready(function(e) {
         var cell = cellView.model;
         var cellViewsBelow = paper.findViewsFromPoint(cell.getBBox().center());
         
-        console.log("PARENT1", cell.get('parent'));
-
         if (cellViewsBelow.length) {
             // Note that the findViewsFromPoint() returns the view for the `cell` itself.
             var cellViewBelow = _.find(cellViewsBelow, function(c) { return c.model.id !== cell.id });
             // Prevent recursive embedding.
             if (cellViewBelow && cellViewBelow.model.get('parent') !== cell.id ) {
                 //&& cellViewBelow.id == 'cut'
-                console.log(cellViewBelow.model);
                 cellViewBelow.model.embed(cell);
 
                 cellViewBelow.model.fitEmbeds({deep: true, padding: 20});
             }
         }
-        console.log("PARENT2", cell.get('parent'));
+        this.embeddingMode = false;
     });
 
     $("#workHolder").on({
         mousedown: function(e) {
             last_mousex = parseInt(e.clientX - 185);
             last_mousey = parseInt(e.clientY - 55);
-            $("#workHolder").on({
-                mousemove: function(e) {
-                    if(e.target.id != "v-2"){
-                        console.log(e, e.target.parentNode.parentNode.parentNode);
-                    }
-                }
-            })
         },
         mouseup: function(e) {
             if ((last_mousex + 1 >= e.pageX - 185 && last_mousex - 1 <= e.pageX - 185) && (last_mousey + 1 >= e.pageY - 55&& last_mousey - 1 <= e.pageY - 55)) {
@@ -72,21 +65,19 @@ $(document).ready(function(e) {
                     add_cut(graph, last_mousex, last_mousey);
                 } else if(currOperation == "Delete") {
                     delete_x(e);
+                } else if(currOperation == "Insert DC") {
+                    insert_dc(graph, last_mousex, last_mousey);
                 }
             }
         }
     });
 
-    // highlight parent element when hovering
-    paper.bind('cell:mouseover cell:mousedown', function(cellView, evt, x, y) {
-        /*
-        cellView.
-        cellView.el.attr({
-            body: {
-                stroke: 'red'
-            }
-        })
-        */
+    $("#save").on('click', function() {
+        savedGraph = graph.toJSON();
+    });
+
+    $("#load").on('click', function() {
+        graph.fromJSON(savedGraph);
     });
 
     $(".sidebar_button").on('click', function(e) {
@@ -96,7 +87,6 @@ $(document).ready(function(e) {
         } else {
             for(var i = 0; i < $(".sidebar_button").length; i++) {
                 if($(".sidebar_button")[i].innerHTML == currOperation) {
-                    console.log($(".sidebar_button")[i].innerHTML);
                     currOperation = "";
                     $($(".sidebar_button")[i]).css("background-color", "white");
                     break;
@@ -122,6 +112,7 @@ function add_prop(graph, last_mousex, last_mousey) {
     if(message != null) {
         var rect = new joint.shapes.standard.Rectangle();
         rect.position(last_mousex + 15, last_mousey + 5);
+        console.log(last_mousex, last_mousey);
         rect.resize(10 + 10 * message.length, 20);
         rect.attr({
             id: 'pro',
@@ -136,9 +127,10 @@ function add_prop(graph, last_mousex, last_mousey) {
             }
         });
         rect.addTo(graph);
+        rect.toFront();
+        rect.set('z', 100);
+        $('#workHolder').trigger('cell:pointerup');
     }
-    $('#workHolder').trigger('cell:pointerup');
-    $('#workHolder').trigger('cell:pointerdown');
 }
 
 function add_cut(graph, last_mousex, last_mousey) {
@@ -158,4 +150,31 @@ function add_cut(graph, last_mousex, last_mousey) {
 function delete_x(cell) {
     console.log(cell.target);
     cell.target.remove();
+}
+
+function insert_dc(graph, last_mousex, last_mousey) {
+    var outter_cut = new joint.shapes.basic.Rect();
+    var inner_cut = new joint.shapes.basic.Rect();
+    outter_cut.position(last_mousex - 75, last_mousey - 75);
+    outter_cut.resize(200, 200);
+    outter_cut.attr({
+        id: 'cut',
+        rect: {
+            'fill-opacity': 0, 
+            stroke: 'black'
+        }
+    });
+    inner_cut.position(last_mousex - 55, last_mousey - 55);
+    inner_cut.resize(160, 160);
+    inner_cut.attr({
+        id: 'cut',
+        rect: {
+            'fill-opacity': 0, 
+            stroke: 'black'
+        }
+    });
+    graph.addCell(outter_cut);
+    graph.addCell(inner_cut);
+    console.log(inner_cut);
+    outter_cut.embed(inner_cut);
 }
